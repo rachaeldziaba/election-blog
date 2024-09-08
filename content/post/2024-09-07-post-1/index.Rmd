@@ -12,27 +12,43 @@ In my first blog post of the series, I will be analyzing and visualizing two fou
    1. How competitive are presidential elections in the United States?
    2. Which states vote blue/red and how consistently?
 
-I also will be customizing my visualizations (extension #1). See citations for data, code, and other sources at the bottom.
+I also will be customizing my visualizations (extension 1). See citations for data, code, and other sources at the bottom.
+
 ---
-```{r plot1, echo=FALSE}
+
+```{r plot1, echo=FALSE, warning=FALSE, message=FALSE}
+# Load libraries.
 library(ggplot2)
 library(maps)
 library(tidyverse)
+library(knitr)
 
+
+# Set working directory
+setwd("/Users/racha1/Desktop/election-blog/content/post/2024-09-07-post-1")
+
+# Read presidential popular vote.
 d_popvote <- read_csv("popvote_1948-2020.csv")
-d_popvote %>% 
-  filter(year == 2020) %>% 
-  select(party, candidate, pv2p)
+
+# Pivot data to wide format with party names as columns and two-party vote share as values.
 (d_popvote_wide <- d_popvote %>%
     select(year, party, pv2p) %>%
     pivot_wider(names_from = party, values_from = pv2p))
+
+# Modify winner column to show "D" if Democrats win and "R" if Republicans win.
 (d_popvote_wide <- d_popvote_wide %>% 
     mutate(winner = case_when(democrat > republican ~ "D",
                               TRUE ~ "R")))
-d_popvote_wide %>%
+
+# Summarize data to show winners.
+summary_table <- d_popvote_wide %>%
   group_by(winner) %>%
   summarise(races = n())
-  
+
+# Present in table
+print(summary_table)
+
+# Set custom theme for plots
 my_custom_theme <- theme_bw() + 
   theme(panel.border = element_blank(),
         plot.title = element_text(family = "Georgia", size = 15, face = "bold", hjust = 0.5),
@@ -45,29 +61,119 @@ my_custom_theme <- theme_bw() +
         axis.title.x = element_text(family = "Georgia", size = 13),
         axis.title.y = element_text(family = "Georgia", size = 13))
 
+# Create and customize line plot to visualize 
 d_popvote %>%
   ggplot(aes(x = year, y = pv2p, color = party)) + 
   geom_line() +
   geom_point(size = 2) +
   scale_color_manual(values = c("royalblue3", "red3"), labels = c("Democrat", "Republican")) +
-  ggtitle("Presidential Vote Share by Party") +
+  ggtitle("Two-Party Presidential Vote Share") +
   labs(x = "Year", y = "Popular Vote Percentage", color = "Party:") +
   my_custom_theme
 
 ```
----
-```{r plot2, echo=FALSE, eval=FALSE}
+
+```{r plot2 echo=FALSE}
+library(usmap)
+library(plotly)
+
+state.abbrevs <- read_csv("states.csv")
+
+# 0 - republican
+winners_map <- d_pvstate_wide %>% 
+  mutate(winner = ifelse(R_pv > D_pv, 1, -1)) %>%
+  left_join(state.abbrevs, by = c("state" = "State"))
+
+map_layout <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = FALSE,
+  lakecolor = toRGB('white'))
+
+winners_map %>% plot_geo(locationmode = "USA-states") %>% 
+  add_trace(type = 'choropleth', z = ~winner, locations = ~Abbreviation,
+            colorscale = list(c(0, 'royalblue3'), c(0.5, 'white'), c(1, 'red3')),
+            zmin = -1,
+            zmax = 1,
+            frame = ~year, 
+            showscale = FALSE,
+            text = ~paste(Abbreviation),
+            hoverinfo = 'text') %>%
+              layout(title = "Two-Party Presidential Winner by State", font = list(family = "Georgia"),
+                     geo = map_layout)
+```
+
+```{r plot3, echo=FALSE}
+library(usmap)
+library(plotly)
+
+state.abbrevs <- read_csv("states.csv")
+
+margin_map <- d_pvstate_wide %>% 
+  mutate(winner = ifelse(R_pv > D_pv, "Republican", "Democrat"), margin = R_pv2p - D_pv2p) %>%
+  left_join(state.abbrevs, by = c("state" = "State"))
+
+map_layout <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = FALSE,
+  lakecolor = toRGB('white'))
+
+margin_map %>% plot_geo(locationmode = "USA-states") %>% 
+  add_trace(type = 'choropleth', z = ~margin, locations = ~Abbreviation,
+            colorscale = list(c(0, 'royalblue3'), c(0.5, 'white'), c(1, 'red3')),
+            zmin = -100,
+            zmax = 100,
+            frame = ~year, 
+            showscale = TRUE,
+            text = ~paste(Abbreviation, "<br>",
+                          "Democratic:", round(D_pv2p, 1),"%<br>",
+                          "Republican:", round(R_pv2p, 1),"%<br>"),
+            hoverinfo = 'text',
+            colorbar = list(title = "Win Margin <br> (Rep-Dem)", 
+                            tickvals = c(-100, -50, -25, 0, 25, 50, 100),
+                            ticktext = c("-100", "-50", "-25", "0", "25", "50", "100"))) %>%
+              layout(title = "Two-Party Presidential Vote Share by State", font = list(family = "Georgia"),
+                     geo = map_layout)
+```
+
+```{r prediction, echo = FALSE}
+
 states_map <- map_data("state")
-d_pvstate_wide <- read_csv("clean_wide_state_2pv_1948_2020.csv")
-`d_pvstate_wide$region <- tolower(d_pvstate_wide$state)
-pv_map <- d_pvstate_wide %>%
+
+pv2p_2024_states <- d_pvstate_wide %>%
   filter(year == 2020) %>%
-  left_join(states_map, by = "region")`
-pv_win_map <- d_pvstate_wide %>%
-  filter(year == 2020) %>%
+  group_by(state) %>% 
+  summarize(D_pv2p_2024 = 0.75*D_pv2p + 0.25*D_pv2p_lag1, 
+            R_pv2p_2024 = 0.75*R_pv2p + 0.25*R_pv2p_lag1) %>% 
+  mutate(pv2p_2024_margin = R_pv2p_2024 - D_pv2p_2024,
+         region = tolower(state))
+
+pv2p_2024_states %>%
   left_join(states_map, by = "region") %>%
-  mutate(winner = ifelse(R_pv > D_pv, "republican", "democrat"))
-pv_win_map %>%
-  ggplot(aes(long, lat, group = group)) +
-  geom_polygon(aes(fill = winner), color = "black") +
-  scale_fill_manual(values = c("dodgerblue4", "firebrick1"))
+  ggplot(aes(long, lat, group = group)) + 
+  geom_polygon(aes(fill = pv2p_2024_margin), color = "black") + 
+  scale_fill_gradient2(high = "red3", 
+                       low = "royalblue3", 
+                       mid = "white", 
+                       name = "Vote Margin (Rep-Dem)", 
+                       breaks = c(-50, -25, 0, 25, 50), 
+                       limits = c(-50, 50)) + 
+  ggtitle("Projected Two-Party Presidential Vote Share in 2024") +
+  theme_void() +
+  theme(text = element_text(family = "Georgia"))
+  
+
+ec <- read_csv("ec_full (1).csv")
+
+pv2p_2024_states <- pv2p_2024_states %>%
+  mutate(year = 2024, 
+         winner = ifelse(R_pv2p_2024 > D_pv2p_2024, "R", "D")) %>% 
+  left_join(ec, by = c("state", "year"))
+
+winner_2024 <- pv2p_2024_states %>%
+  group_by(winner) %>%
+  summarize(electoral_votes = sum(electors))
+
+print(winner_2024)
+```

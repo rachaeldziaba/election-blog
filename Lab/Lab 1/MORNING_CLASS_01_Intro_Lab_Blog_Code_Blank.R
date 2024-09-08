@@ -135,8 +135,8 @@ pv2p_2024_states |>
   scale_fill_gradient2(high = "firebrick1", 
                        mid = "white", 
                        low = "dodgerblue4", 
-                       breaks = c(-50, -25, 0, 25, 50), 
-                       limits = c(-50, 50)) + 
+                       breaks = c(-100, -50, -25, 0, 25, 50, 100), 
+                       limits = c(-100, 100)) + 
   theme_void()
 
 ec <- read_csv("ec_full.csv")

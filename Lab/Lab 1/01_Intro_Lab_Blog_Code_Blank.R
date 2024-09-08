@@ -106,7 +106,7 @@ d_pvstate_wide %>%
   mutate(winner = ifelse(R_pv > D_pv, "republican", "democrat")) %>%
   ggplot(aes(long, lat, group = group)) +
   facet_wrap(facets = year ~.) +
-  geom_polygon((aes(fill = winner), color = "white")) +
+  geom_polygon(aes(fill = winner), color = "white") +
   scale_fill_manual(values = c("dodgerblue4", "firebrick1")) +
   theme_void() +
   ggtitle("Presidential Vote Share by State (1980-2020)") +
