@@ -9,7 +9,9 @@ tags: []
 draft: false
 ---
 
-In my first blog post of the series, I will be analyzing and visualizing two foundational questions about the election: 1. How competitive are presidential elections in the United States? 2. Which states vote blue/red and how consistently?
+In my first blog post of the series, I will be analyzing and visualizing two foundational questions about the election: 
+   1. How competitive are presidential elections in the United States? 
+   2. Which states vote blue/red and how consistently?
 
 I also will be customizing my visualizations (extension 1). See citations for data, code, and other sources at the bottom.
 
