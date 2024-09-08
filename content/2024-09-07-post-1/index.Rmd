@@ -54,4 +54,19 @@ d_popvote %>%
   labs(x = "Year", y = "Popular Vote Percentage", color = "Party:") +
   my_custom_theme
 ```
-
+---
+```{r plot, echo=FALSE}
+states_map <- map_data("state")
+d_pvstate_wide <- read_csv("clean_wide_state_2pv_1948_2020.csv")
+`d_pvstate_wide$region <- tolower(d_pvstate_wide$state)
+pv_map <- d_pvstate_wide %>%
+  filter(year == 2020) %>%
+  left_join(states_map, by = "region")`
+pv_win_map <- d_pvstate_wide %>%
+  filter(year == 2020) %>%
+  left_join(states_map, by = "region") %>%
+  mutate(winner = ifelse(R_pv > D_pv, "republican", "democrat"))
+pv_win_map %>%
+  ggplot(aes(long, lat, group = group)) +
+  geom_polygon(aes(fill = winner), color = "black") +
+  scale_fill_manual(values = c("dodgerblue4", "firebrick1"))
