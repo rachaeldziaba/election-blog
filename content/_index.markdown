@@ -2,9 +2,9 @@
 title: Home
 ---
 
-[<img src="https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/rockcms/2024-08/240808-kamala-harris-donald-trump-2-up-split-3x2-ac-1118p-4bda4f.jpg" style="max-width:30%;min-width:40px;float:right;"/>] (https://www.nbcnews.com/politics/2024-election/live-blog/harris-trump-election-live-updates-rcna164958)
+[<img src="https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/rockcms/2024-08/240808-kamala-harris-donald-trump-2-up-split-3x2-ac-1118p-4bda4f.jpg" style="max-width:30%;min-width:40px;float:right;"/>](https://www.nbcnews.com/politics/2024-election/live-blog/harris-trump-election-live-updates-rcna164958)
 
-# ELECTION BLOG
+# Election Blog
 
 ## _By: Rachael Dziaba_
 
