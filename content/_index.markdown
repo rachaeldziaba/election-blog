@@ -10,4 +10,4 @@ title: Home
 
 This blog contains my forecasts for the 2024 US Presidential Election for the class Gov 1347 with Professor Ryan Enos. It will be updated weekly on Mondays.
 
-All pages not under the root directory of the website are listed below. You can also visit the list page of a single section, e.g., [posts](/post/), or [notes](/note/). See the [About](/about/) page for information about the blog.
+All pages not under the root directory of the website are listed below. You can also visit the list page of a single section, e.g., [posts](/post/), or [notes](/note/). 
