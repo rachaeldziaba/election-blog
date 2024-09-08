@@ -14,11 +14,10 @@ In my first blog post of the series, I will be analyzing and visualizing two fou
 
 I also will be customizing my visualizations (extension #1). See citations for data, code, and other sources at the bottom.
 ---
-```{r plot, echo=FALSE}
+```{r plot1, echo=FALSE}
 library(ggplot2)
 library(maps)
 library(tidyverse)
-setwd("/Users/racha1/Desktop/election-blog/Lab/Lab 1")
 
 d_popvote <- read_csv("popvote_1948-2020.csv")
 d_popvote %>% 
@@ -54,9 +53,10 @@ d_popvote %>%
   ggtitle("Presidential Vote Share by Party") +
   labs(x = "Year", y = "Popular Vote Percentage", color = "Party:") +
   my_custom_theme
+
 ```
 ---
-```{r plot, echo=FALSE}
+```{r plot2, echo=FALSE, eval=FALSE}
 states_map <- map_data("state")
 d_pvstate_wide <- read_csv("clean_wide_state_2pv_1948_2020.csv")
 `d_pvstate_wide$region <- tolower(d_pvstate_wide$state)
