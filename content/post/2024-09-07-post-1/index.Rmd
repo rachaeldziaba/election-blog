@@ -11,7 +11,7 @@ In my first blog post of the series, I will be analyzing and visualizing two fou
    1. How competitive are presidential elections in the United States?
    2. Which states vote blue/red and how consistently?
 
-I also will be customizing my visualizations (extension #1). See citations for data and other sources at the bottom.
+I also will be customizing my visualizations (extension #1). See citations for data, code, and other sources at the bottom.
 ---
 ```{r plot, echo=FALSE}
 library(ggplot2)
