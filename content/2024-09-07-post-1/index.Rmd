@@ -13,7 +13,7 @@ In my first blog post of the series, I will be analyzing and visualizing two fou
 
 I also will be customizing my visualizations (extension #1). See citations for data and other sources at the bottom.
 ---
-[//]: # 
+```{r plot, echo=FALSE}
 library(ggplot2)
 library(maps)
 library(tidyverse)
@@ -23,25 +23,35 @@ d_popvote <- read_csv("popvote_1948-2020.csv")
 d_popvote %>% 
   filter(year == 2020) %>% 
   select(party, candidate, pv2p)
-(d_popvote_wide <- d_popvote |>
-    select(year, party, pv2p) |>
+(d_popvote_wide <- d_popvote %>%
+    select(year, party, pv2p) %>%
     pivot_wider(names_from = party, values_from = pv2p))
-(d_popvote_wide <- d_popvote_wide |> 
+(d_popvote_wide <- d_popvote_wide %>% 
     mutate(winner = case_when(democrat > republican ~ "D",
                               TRUE ~ "R")))
-d_popvote_wide |> 
-  group_by(winner) |>
+d_popvote_wide %>%
+  group_by(winner) %>%
   summarise(races = n())
-d_popvote %>%
-  ggplot(aes(x = year, y = pv2p, color = party)) + geom_line() +
-  scale_color_manual(values = c("royalblue3", "red3")) +
-  theme_bw() + 
+  
+my_custom_theme <- theme_bw() + 
   theme(panel.border = element_blank(),
-        plot.title = element_text(size = 15, hjust = 0.5), 
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text = element_text(size = 12),
-        strip.text = element_text(size = 18),
+        plot.title = element_text(family = "Georgia", size = 15, face = "bold", hjust = 0.5),
+        axis.text = element_text(family = "Georgia", size = 12),
         axis.line = element_line(colour = "black"),
-        legend.position = "top",
-        legend.text = element_text(size = 12))
+        legend.position = "bottom",
+        legend.title = element_text(family = "Georgia", size = 12),
+        legend.text = element_text(family = "Georgia", size = 12),
+        legend.box.background = element_rect(color = "black", size = 0.5), 
+        axis.title.x = element_text(family = "Georgia", size = 13),
+        axis.title.y = element_text(family = "Georgia", size = 13))
+
+d_popvote %>%
+  ggplot(aes(x = year, y = pv2p, color = party)) + 
+  geom_line() +
+  geom_point(size = 2) +
+  scale_color_manual(values = c("royalblue3", "red3"), labels = c("Democrat", "Republican")) +
+  ggtitle("Presidential Vote Share by Party") +
+  labs(x = "Year", y = "Popular Vote Percentage", color = "Party:") +
+  my_custom_theme
+```
 
