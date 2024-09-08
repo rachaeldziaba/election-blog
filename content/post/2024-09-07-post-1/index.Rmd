@@ -6,6 +6,7 @@ slug: post-1
 categories:
   - blog
 tags: []
+draft: false
 ---
 In my first blog post of the series, I will be analyzing and visualizing two foundational questions about the election: 
    1. How competitive are presidential elections in the United States?
