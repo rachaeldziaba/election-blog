@@ -7,4 +7,4 @@ categories:
   - Blog
 tags: []
 ---
-This is Rachael Dziaba's blog post for Gov 1347.
+This is Rachael Dziaba's election blog for Gov 1347.

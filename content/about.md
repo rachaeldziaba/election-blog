@@ -1,5 +1,5 @@
 ---
-author: Yihui Xie
+author: Rachael Dziaba
 title: About Hugo XMin
 ---
 
