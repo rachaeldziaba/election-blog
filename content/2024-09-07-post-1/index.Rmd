@@ -1,0 +1,47 @@
+---
+title: Blog Post 1
+author: Rachael Dziaba
+date: '2024-09-07'
+slug: post-1
+categories:
+  - blog
+tags: []
+---
+In my first blog post of the series, I will be analyzing and visualizing two foundational questions about the election: 
+   1. How competitive are presidential elections in the United States?
+   2. Which states vote blue/red and how consistently?
+
+I also will be customizing my visualizations (extension #1). See citations for data and other sources at the bottom.
+---
+[//]: # 
+library(ggplot2)
+library(maps)
+library(tidyverse)
+setwd("/Users/racha1/Desktop/election-blog/Lab/Lab 1")
+
+d_popvote <- read_csv("popvote_1948-2020.csv")
+d_popvote %>% 
+  filter(year == 2020) %>% 
+  select(party, candidate, pv2p)
+(d_popvote_wide <- d_popvote |>
+    select(year, party, pv2p) |>
+    pivot_wider(names_from = party, values_from = pv2p))
+(d_popvote_wide <- d_popvote_wide |> 
+    mutate(winner = case_when(democrat > republican ~ "D",
+                              TRUE ~ "R")))
+d_popvote_wide |> 
+  group_by(winner) |>
+  summarise(races = n())
+d_popvote %>%
+  ggplot(aes(x = year, y = pv2p, color = party)) + geom_line() +
+  scale_color_manual(values = c("royalblue3", "red3")) +
+  theme_bw() + 
+  theme(panel.border = element_blank(),
+        plot.title = element_text(size = 15, hjust = 0.5), 
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text = element_text(size = 12),
+        strip.text = element_text(size = 18),
+        axis.line = element_line(colour = "black"),
+        legend.position = "top",
+        legend.text = element_text(size = 12))
+
