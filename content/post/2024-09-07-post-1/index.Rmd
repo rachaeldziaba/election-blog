@@ -13,17 +13,20 @@ In my first blog post of the series, I will be analyzing and visualizing two fou
    1. How competitive are presidential elections in the United States? 
    2. Which states vote blue/red and how consistently?
 
-I also will be customizing my visualizations (extension 1). See citations for data, code, and other sources at the bottom.
+I also will be customizing my visualizations (extension 1). See citations for data and other sources at the bottom. Code can be found in my Github repository.
 
 ------------------------------------------------------------------------
 
+
+
 ```{r plot1, echo=FALSE, warning=FALSE, message=FALSE}
+# The following is based on code provided by Matthew Dardet in our first laboratory session. Datasets (unless otherwise noted) provided in class.
+
 # Load libraries.
 library(ggplot2)
 library(maps)
 library(tidyverse)
 library(knitr)
-
 
 # Set working directory
 setwd("/Users/racha1/Desktop/election-blog/content/post/2024-09-07-post-1")
@@ -75,21 +78,33 @@ d_popvote %>%
 ```
 
 ```{r plot2 echo=FALSE}
+
+# The following is a combination of code provided by Matthew Dardet and code used in Ethan Jasny's "Blog Post 1" from 2022 (https://ethanjasny.github.io/gov1347/post/2022-09-09-test-post-1/)
+
+# Load libraries
 library(usmap)
 library(plotly)
 
+# State abbreviation data downloaded from Jason Ong's github (https://github.com/jasonong/List-of-US-States/blob/master/states.csv?plain=1)
+
+# Read state abbreviations
 state.abbrevs <- read_csv("states.csv")
 
-# 0 - republican
+# Modify winner column to be "1" if Republicans win and "-1" if Democrats win.
 winners_map <- d_pvstate_wide %>% 
   mutate(winner = ifelse(R_pv > D_pv, 1, -1)) %>%
+# Join with state abbreviation dataset
   left_join(state.abbrevs, by = c("state" = "State"))
 
+# Define map layout (source: Ethan Jasny)
 map_layout <- list(
   scope = 'usa',
   projection = list(type = 'albers usa'),
   showlakes = FALSE,
   lakecolor = toRGB('white'))
+
+# Create map of winners in each state over time
+# Code for type, colorscale, text, and hoverinfo developed with assistance from ChatGPT 
 
 winners_map %>% plot_geo(locationmode = "USA-states") %>% 
   add_trace(type = 'choropleth', z = ~winner, locations = ~Abbreviation,
@@ -105,21 +120,30 @@ winners_map %>% plot_geo(locationmode = "USA-states") %>%
 ```
 
 ```{r plot3, echo=FALSE}
+
+# The following is adapted from the above, combining code provided by Matthew Dardet and code used in Ethan Jasny's "Blog Post 1" from 2022 (https://ethanjasny.github.io/gov1347/post/2022-09-09-test-post-1/)
+ 
+# Load libraries
 library(usmap)
 library(plotly)
 
+# Read state abbreviation data (source: Jason Ong)
 state.abbrevs <- read_csv("states.csv")
 
+# Modify winner column to say Republican if Republicans won and Democrats if Democrats won. Modify margin to be the difference in the two-party popular votes. Join with state abbreviation data
 margin_map <- d_pvstate_wide %>% 
   mutate(winner = ifelse(R_pv > D_pv, "Republican", "Democrat"), margin = R_pv2p - D_pv2p) %>%
   left_join(state.abbrevs, by = c("state" = "State"))
 
+# Set map layout.
 map_layout <- list(
   scope = 'usa',
   projection = list(type = 'albers usa'),
   showlakes = FALSE,
   lakecolor = toRGB('white'))
 
+# Create map of margins in each state.
+# Code for text and colorbar developed with assistance of ChatGPT
 margin_map %>% plot_geo(locationmode = "USA-states") %>% 
   add_trace(type = 'choropleth', z = ~margin, locations = ~Abbreviation,
             colorscale = list(c(0, 'royalblue3'), c(0.5, 'white'), c(1, 'red3')),
@@ -140,8 +164,13 @@ margin_map %>% plot_geo(locationmode = "USA-states") %>%
 
 ```{r prediction, echo = FALSE}
 
+# The following is based on code provided by Matthew Dardet.
+
+# Sequester shapefile of states from `maps` library.
 states_map <- map_data("state")
 
+# Create prediction (pv2p and margin) based on simplified electoral cycle model:
+# vote_2024 = 3/4*vote_2020 + 1/4*vote_2016 (lag1, lag2, respectively). 
 pv2p_2024_states <- d_pvstate_wide %>%
   filter(year == 2020) %>%
   group_by(state) %>% 
@@ -150,6 +179,7 @@ pv2p_2024_states <- d_pvstate_wide %>%
   mutate(pv2p_2024_margin = R_pv2p_2024 - D_pv2p_2024,
          region = tolower(state))
 
+# Plot the margin of victory in a U.S. state map.
 pv2p_2024_states %>%
   left_join(states_map, by = "region") %>%
   ggplot(aes(long, lat, group = group)) + 
@@ -163,17 +193,21 @@ pv2p_2024_states %>%
   ggtitle("Projected Two-Party Presidential Vote Share in 2024") +
   theme_void() +
   theme(text = element_text(family = "Georgia"))
-  
+
+# Read electoral college votes. 
 ec <- read_csv("ec_full (1).csv")
 
+# Modify winner column again and join with electoral college votes
 pv2p_2024_states <- pv2p_2024_states %>%
   mutate(year = 2024, 
          winner = ifelse(R_pv2p_2024 > D_pv2p_2024, "R", "D")) %>% 
   left_join(ec, by = c("state", "year"))
 
+# Generate summary of electoral college winner by combining projected state winners.
 winner_2024 <- pv2p_2024_states %>%
   group_by(winner) %>%
   summarize(electoral_votes = sum(electors))
 
+# Show electoral college summaries
 print(winner_2024)
 ```
