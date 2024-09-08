@@ -1,9 +1,0 @@
----
-title: Election Blog
-author: Package Build
-date: '2024-09-03'
-slug: election-blog
-categories: []
-tags: []
----
-This is Rachael Dziaba's election blog for Gov 1347.
