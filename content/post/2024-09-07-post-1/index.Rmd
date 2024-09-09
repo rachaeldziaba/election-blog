@@ -6,7 +6,6 @@ slug: post-1
 categories:
   - blog
 tags: []
-draft: false
 ---
 
 In my first blog post of the series, I will be analyzing and visualizing two foundational questions about the election: 
@@ -84,6 +83,8 @@ d_popvote %>%
 library(usmap)
 library(plotly)
 
+d_pvstate_wide <- read_csv("clean_wide_state_2pv_1948_2020.csv")
+
 # State abbreviation data downloaded from Jason Ong's github (https://github.com/jasonong/List-of-US-States/blob/master/states.csv?plain=1)
 
 # Read state abbreviations
@@ -105,7 +106,7 @@ map_layout <- list(
 # Create map of winners in each state over time
 # Code for type, colorscale, text, and hoverinfo developed with assistance from ChatGPT 
 
-winners_map %>% plot_geo(locationmode = "USA-states") %>% 
+winners_map_figure <- winners_map %>% plot_geo(locationmode = "USA-states") %>% 
   add_trace(type = 'choropleth', z = ~winner, locations = ~Abbreviation,
             colorscale = list(c(0, 'royalblue3'), c(0.5, 'white'), c(1, 'red3')),
             zmin = -1,
@@ -116,6 +117,8 @@ winners_map %>% plot_geo(locationmode = "USA-states") %>%
             hoverinfo = 'text') %>%
               layout(title = "Two-Party Presidential Winner by State", font = list(family = "Georgia"),
                      geo = map_layout)
+
+winners_map_figure
 ```
 
 ```{r plot3, echo=FALSE}
@@ -143,7 +146,7 @@ map_layout <- list(
 
 # Create map of margins in each state.
 # Code for text and colorbar developed with assistance of ChatGPT
-margin_map %>% plot_geo(locationmode = "USA-states") %>% 
+margin_map_figure <- margin_map %>% plot_geo(locationmode = "USA-states") %>% 
   add_trace(type = 'choropleth', z = ~margin, locations = ~Abbreviation,
             colorscale = list(c(0, 'royalblue3'), c(0.5, 'white'), c(1, 'red3')),
             zmin = -100,
@@ -159,14 +162,34 @@ margin_map %>% plot_geo(locationmode = "USA-states") %>%
                             ticktext = c("-100", "-50", "-25", "0", "25", "50", "100"))) %>%
               layout(title = "Two-Party Presidential Vote Share by State", font = list(family = "Georgia"),
                      geo = map_layout)
+
+margin_map_figure
 ```
 
 ```{r prediction, echo = FALSE}
 
 # The following is based on code provided by Matthew Dardet.
 
+setwd("/Users/racha1/Desktop/election-blog/content/post/2024-09-07-post-1")
+
+# Read presidential popular vote.
+d_popvote <- read_csv("popvote_1948-2020.csv")
+
+# Pivot data to wide format with party names as columns and two-party vote share as values.
+(d_popvote_wide <- d_popvote %>%
+    select(year, party, pv2p) %>%
+    pivot_wider(names_from = party, values_from = pv2p))
+
+# Modify winner column to show "D" if Democrats win and "R" if Republicans win.
+(d_popvote_wide <- d_popvote_wide %>% 
+    mutate(winner = case_when(democrat > republican ~ "D",
+                              TRUE ~ "R")))
+
 # Sequester shapefile of states from `maps` library.
 states_map <- map_data("state")
+
+# Merge d_pvstate_wide with state_map.
+d_pvstate_wide$region <- tolower(d_pvstate_wide$state)
 
 # Create prediction (pv2p and margin) based on simplified electoral cycle model:
 # vote_2024 = 3/4*vote_2020 + 1/4*vote_2016 (lag1, lag2, respectively). 
