@@ -8,14 +8,11 @@ categories:
 tags: []
 ---
 
-In my first blog post of the series, I will be analyzing and visualizing two foundational questions about the election: 
-   1. How competitive are presidential elections in the United States? 
-   2. Which states vote blue/red and how consistently?
+In my first blog post of the series, I will be analyzing and visualizing two foundational questions about the election: 1. How competitive are presidential elections in the United States? 2. Which states vote blue/red and how consistently?
 
 I also will be customizing my visualizations (extension 1). See citations for data and other sources at the bottom. Code can be found in my Github repository.
 
 ------------------------------------------------------------------------
-
 
 ```{r plot1, echo=FALSE, warning=FALSE, message=FALSE}
 # The following is based on code provided by Matthew Dardet in our first laboratory session. Datasets (unless otherwise noted) provided in class.
@@ -33,14 +30,14 @@ setwd("/Users/racha1/Desktop/election-blog/content/post/2024-09-07-post-1")
 d_popvote <- read_csv("popvote_1948-2020.csv")
 
 # Pivot data to wide format with party names as columns and two-party vote share as values.
-(d_popvote_wide <- d_popvote %>%
+d_popvote_wide <- d_popvote %>%
     select(year, party, pv2p) %>%
-    pivot_wider(names_from = party, values_from = pv2p))
+    pivot_wider(names_from = party, values_from = pv2p)
 
 # Modify winner column to show "D" if Democrats win and "R" if Republicans win.
-(d_popvote_wide <- d_popvote_wide %>% 
+d_popvote_wide <- d_popvote_wide %>% 
     mutate(winner = case_when(democrat > republican ~ "D",
-                              TRUE ~ "R")))
+                              TRUE ~ "R"))
 
 # Summarize data to show winners.
 summary_table <- d_popvote_wide %>%
@@ -202,7 +199,8 @@ pv2p_2024_states <- d_pvstate_wide %>%
          region = tolower(state))
 
 # Plot the margin of victory in a U.S. state map.
-pv2p_2024_states %>%
+# Code for map sizing (to fix shrinkage) developed with assistance of ChatGPT
+map_2024 <-pv2p_2024_states %>%
   left_join(states_map, by = "region") %>%
   ggplot(aes(long, lat, group = group)) + 
   geom_polygon(aes(fill = pv2p_2024_margin), color = "black") + 
@@ -214,7 +212,10 @@ pv2p_2024_states %>%
                        limits = c(-50, 50)) + 
   ggtitle("Projected Two-Party Presidential Vote Share in 2024") +
   theme_void() +
+  coord_map("albers", lat0 = 39, lat1 = 45) +
   theme(text = element_text(family = "Georgia"))
+  
+  map_2024
 
 # Read electoral college votes. 
 ec <- read_csv("ec_full (1).csv")
