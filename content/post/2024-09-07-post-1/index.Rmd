@@ -292,9 +292,9 @@ print(winner_2024)
 
 ## Data Sources
 
-Presidential Popular Votes, 1948-2024. Provided by Matthew Dardet. 
-State Popular Votes, 1948-2024. Provided by Matthew Dardet. 
-Electoral College Votes Per State. Provided by Matthew Dardet.
-State Abbreviations. Downloaded from Jason Ong’s GitHub, <https://github.com/jasonong/List-of-US-States/blob/master/states.csv>
+   1. Presidential Popular Votes, 1948-2024. Provided by Matthew Dardet. 
+   2. State Popular Votes, 1948-2024. Provided by Matthew Dardet. 
+   3. Electoral College Votes Per State. Provided by Matthew Dardet.
+   4. State Abbreviations. Downloaded from Jason Ong’s GitHub, <https://github.com/jasonong/List-of-US-States/blob/master/states.csv>
 
 
