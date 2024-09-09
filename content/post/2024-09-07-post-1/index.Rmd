@@ -14,7 +14,7 @@ I also will be customizing my visualizations (extension 1). See citations for da
 
 ------------------------------------------------------------------------
 
-```{r plot1, echo=FALSE, warning=FALSE, message=FALSE}
+```{r table, echo=FALSE, warning=FALSE, message=FALSE}
 # The following is based on code provided by Matthew Dardet in our first laboratory session. Datasets (unless otherwise noted) provided in class.
 
 # Load libraries.
@@ -46,6 +46,9 @@ summary_table <- d_popvote_wide %>%
 
 # Present in table
 print(summary_table)
+```
+
+```{r plot1, echo=FALSE, warning=FALSE, message=FALSE}
 
 # Set custom theme for plots
 my_custom_theme <- theme_bw() + 
@@ -61,7 +64,7 @@ my_custom_theme <- theme_bw() +
         axis.title.y = element_text(family = "Georgia", size = 13))
 
 # Create and customize line plot to visualize 
-d_popvote %>%
+line_plot <- d_popvote %>%
   ggplot(aes(x = year, y = pv2p, color = party)) + 
   geom_line() +
   geom_point(size = 2) +
@@ -70,9 +73,11 @@ d_popvote %>%
   labs(x = "Year", y = "Popular Vote Percentage", color = "Party:") +
   my_custom_theme
 
+line_plot
+
 ```
 
-```{r plot2, echo=FALSE}
+```{r plot2, echo=FALSE, warning=FALSE, message=FALSE}
 
 # The following is a combination of code provided by Matthew Dardet and code used in Ethan Jasny's "Blog Post 1" from 2022 (https://ethanjasny.github.io/gov1347/post/2022-09-09-test-post-1/)
 
@@ -118,7 +123,7 @@ winners_map_figure <- winners_map %>% plot_geo(locationmode = "USA-states") %>%
 winners_map_figure
 ```
 
-```{r plot3, echo=FALSE}
+```{r plot3, echo=FALSE, warning=FALSE, message=FALSE}
 
 # The following is adapted from the above, combining code provided by Matthew Dardet and code used in Ethan Jasny's "Blog Post 1" from 2022 (https://ethanjasny.github.io/gov1347/post/2022-09-09-test-post-1/)
  
@@ -154,7 +159,7 @@ margin_map_figure <- margin_map %>% plot_geo(locationmode = "USA-states") %>%
                           "Democratic:", round(D_pv2p, 1),"%<br>",
                           "Republican:", round(R_pv2p, 1),"%<br>"),
             hoverinfo = 'text',
-            colorbar = list(title = "Win Margin <br> (Rep-Dem)", 
+            colorbar = list(title = "Popular Vote Margin <br> (Rep-Dem)", 
                             tickvals = c(-100, -50, -25, 0, 25, 50, 100),
                             ticktext = c("-100", "-50", "-25", "0", "25", "50", "100"))) %>%
               layout(title = "Two-Party Presidential Vote Share by State", font = list(family = "Georgia"),
@@ -163,24 +168,22 @@ margin_map_figure <- margin_map %>% plot_geo(locationmode = "USA-states") %>%
 margin_map_figure
 ```
 
-```{r prediction, echo = FALSE}
+```{r predictionmap, echo = FALSE, warning=FALSE, message=FALSE}
 
 # The following is based on code provided by Matthew Dardet.
-
-setwd("/Users/racha1/Desktop/election-blog/content/post/2024-09-07-post-1")
 
 # Read presidential popular vote.
 d_popvote <- read_csv("popvote_1948-2020.csv")
 
 # Pivot data to wide format with party names as columns and two-party vote share as values.
-(d_popvote_wide <- d_popvote %>%
+d_popvote_wide <- d_popvote %>%
     select(year, party, pv2p) %>%
-    pivot_wider(names_from = party, values_from = pv2p))
+    pivot_wider(names_from = party, values_from = pv2p)
 
 # Modify winner column to show "D" if Democrats win and "R" if Republicans win.
-(d_popvote_wide <- d_popvote_wide %>% 
+d_popvote_wide <- d_popvote_wide %>% 
     mutate(winner = case_when(democrat > republican ~ "D",
-                              TRUE ~ "R")))
+                              TRUE ~ "R"))
 
 # Sequester shapefile of states from `maps` library.
 states_map <- map_data("state")
@@ -207,7 +210,7 @@ map_2024 <-pv2p_2024_states %>%
   scale_fill_gradient2(high = "red3", 
                        low = "royalblue3", 
                        mid = "white", 
-                       name = "Vote Margin (Rep-Dem)", 
+                       name = "Popular Vote Margin\n(Rep-Dem)", 
                        breaks = c(-50, -25, 0, 25, 50), 
                        limits = c(-50, 50)) + 
   ggtitle("Projected Two-Party Presidential Vote Share in 2024") +
@@ -216,6 +219,9 @@ map_2024 <-pv2p_2024_states %>%
   theme(text = element_text(family = "Georgia"))
   
   map_2024
+```
+
+```{r prediction, echo = FALSE, warning=FALSE, message=FALSE}
 
 # Read electoral college votes. 
 ec <- read_csv("ec_full (1).csv")
