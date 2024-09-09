@@ -8,12 +8,14 @@ categories:
 tags: []
 ---
 
-In my first blog post of the series, I will be analyzing and visualizing two foundational questions about the election: 1. How competitive are presidential elections in the United States? 2. Which states vote blue/red and how consistently?
+In my first blog post of the series, I will be analyzing two foundational questions about the election: 
+   1. How competitive are presidential elections in the United States? 
+   2. Which states vote blue/red and how consistently?
 
 I also will be customizing my visualizations (extension 1). See citations for data and other sources at the bottom. Code can be found in my Github repository.
-
 ------------------------------------------------------------------------
 
+## Historic Presidential Election Results  
 ```{r table, echo=FALSE, warning=FALSE, message=FALSE}
 # The following is based on code provided by Matthew Dardet in our first laboratory session. Datasets (unless otherwise noted) provided in class.
 
@@ -27,7 +29,7 @@ library(knitr)
 setwd("/Users/racha1/Desktop/election-blog/content/post/2024-09-07-post-1")
 
 # Read presidential popular vote.
-d_popvote <- read_csv("popvote_1948-2020.csv")
+d_popvote <- read_csv("popvote_1948-2020.csv", show_col_types = FALSE)
 
 # Pivot data to wide format with party names as columns and two-party vote share as values.
 d_popvote_wide <- d_popvote %>%
@@ -85,12 +87,12 @@ line_plot
 library(usmap)
 library(plotly)
 
-d_pvstate_wide <- read_csv("clean_wide_state_2pv_1948_2020.csv")
+d_pvstate_wide <- read_csv("clean_wide_state_2pv_1948_2020.csv", show_col_types = FALSE)
 
 # State abbreviation data downloaded from Jason Ong's github (https://github.com/jasonong/List-of-US-States/blob/master/states.csv?plain=1)
 
 # Read state abbreviations
-state.abbrevs <- read_csv("states.csv")
+state.abbrevs <- read_csv("states.csv", show_col_types = FALSE)
 
 # Modify winner column to be "1" if Republicans win and "-1" if Democrats win.
 winners_map <- d_pvstate_wide %>% 
@@ -117,7 +119,7 @@ winners_map_figure <- winners_map %>% plot_geo(locationmode = "USA-states") %>%
             showscale = FALSE,
             text = ~paste(Abbreviation),
             hoverinfo = 'text') %>%
-              layout(title = "Two-Party Presidential Winner by State", font = list(family = "Georgia"),
+              layout(title = "Two-Party Presidential Popular Vote Winner by State, 1948-2020", font = list(family = "Georgia"),
                      geo = map_layout)
 
 winners_map_figure
@@ -132,7 +134,7 @@ library(usmap)
 library(plotly)
 
 # Read state abbreviation data (source: Jason Ong)
-state.abbrevs <- read_csv("states.csv")
+state.abbrevs <- read_csv("states.csv", show_col_types = FALSE)
 
 # Modify winner column to say Republican if Republicans won and Democrats if Democrats won. Modify margin to be the difference in the two-party popular votes. Join with state abbreviation data
 margin_map <- d_pvstate_wide %>% 
@@ -162,7 +164,7 @@ margin_map_figure <- margin_map %>% plot_geo(locationmode = "USA-states") %>%
             colorbar = list(title = "Popular Vote Margin <br> (Rep-Dem)", 
                             tickvals = c(-100, -50, -25, 0, 25, 50, 100),
                             ticktext = c("-100", "-50", "-25", "0", "25", "50", "100"))) %>%
-              layout(title = "Two-Party Presidential Vote Share by State", font = list(family = "Georgia"),
+              layout(title = "Two-Party Presidential Vote Share by State, 1948-2020", font = list(family = "Georgia"),
                      geo = map_layout)
 
 margin_map_figure
@@ -173,7 +175,7 @@ margin_map_figure
 # The following is based on code provided by Matthew Dardet.
 
 # Read presidential popular vote.
-d_popvote <- read_csv("popvote_1948-2020.csv")
+d_popvote <- read_csv("popvote_1948-2020.csv", show_col_types = FALSE)
 
 # Pivot data to wide format with party names as columns and two-party vote share as values.
 d_popvote_wide <- d_popvote %>%
@@ -224,7 +226,7 @@ map_2024 <-pv2p_2024_states %>%
 ```{r prediction, echo = FALSE, warning=FALSE, message=FALSE}
 
 # Read electoral college votes. 
-ec <- read_csv("ec_full (1).csv")
+ec <- read_csv("ec_full (1).csv", show_col_types = FALSE)
 
 # Modify winner column again and join with electoral college votes
 pv2p_2024_states <- pv2p_2024_states %>%
