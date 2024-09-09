@@ -14,9 +14,9 @@ In my first blog post of the series, I will be analyzing two foundational questi
 
 I also will be customizing my visualizations (extension 1). See citations for data and other sources at the bottom. Code can be found in my Github repository.
 
-## Historic Presidential Election Results ##
+## Historic Presidential Election Results
 
-To explore how competitive presidential elections are, I took a look back at historic election data from 1948 to 2020. First, I cleaned and summarized the data. As can be seen in the table below, in the races since 1948, Democrats have won the popular vote 11 times whereas Republicans have won the popular vote 8 times. At first glance, it’s clear that elections have been fairly competitive although Democrats have a slight advantage, winning only 3 more races than Republicans or 15.79% more often. 
+To explore how competitive presidential elections are, I took a look back at historic election data from 1948 to 2020. First, I cleaned and summarized the data. As can be seen in the table below, in the races since 1948, Democrats have won the popular vote 11 times whereas Republicans have won the popular vote 8 times. At first glance, it’s clear that elections have been fairly competitive although Democrats have a slight advantage, winning only 3 more races than Republicans or 15.79% more often.
 
 ```{r table, echo=FALSE, warning=FALSE, message=FALSE}
 # The following is based on code provided by Matthew Dardet in our first laboratory session. Datasets (unless otherwise noted) provided in class.
@@ -51,11 +51,12 @@ summary_table <- d_popvote_wide %>%
 # Present in table
 print(summary_table)
 ```
-It’s important to acknowledge this calculation is solely based on the popular vote. Democrats actually only won 9 elections, and Republicans won 10 in this timespan(1). The two exceptions were 2000 (the infamous Bush v. Gore Supreme Court case) and 2016 (where Hillary Clinton won the popular vote but not the electoral college). Many scholars and analysts have argued that the electoral college is biased in favor of Republican candidates(2)—a topic I hope to explore in further detail in future blog posts. 
+
+It’s important to acknowledge this calculation is solely based on the popular vote. Democrats actually only won 9 elections, and Republicans won 10 in this timespan(1). The two exceptions were 2000 (the infamous Bush v. Gore Supreme Court case) and 2016 (where Hillary Clinton won the popular vote but not the electoral college). Many scholars and analysts have argued that the electoral college is biased in favor of Republican candidates(2)—a topic I hope to explore in further detail in future blog posts.
 
 For now, however, we can conclude that elections as a whole have been historically competitive between Democrats and Republicans, as they are nearly tied in electoral college results.
 
-To zoom in on individual races, I created a line plot (seen below) that displays the popular vote share for each party’s candidate by year, excluding third-party candidates. 
+To zoom in on individual races, I created a line plot (seen below) that displays the popular vote share for each party’s candidate by year, excluding third-party candidates.
 
 ```{r plot1, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -85,13 +86,15 @@ line_plot <- d_popvote %>%
 line_plot
 
 ```
-One immediate observation from this plot is that the margin of win is notably smaller in the 21st century than the 20th. From 2000 on, the winning candidate has won the popular vote by single digits. The 20+ percent wins of 1964 (Lyndon B. Johnson) and 1972 (Richard Nixon) are no longer par for the course. That said, the later half of the 20th century did vary between these massive wins and extremely close elections (see 1960, 1968, and 1976). 
+
+
+One immediate observation from this plot is that the margin of win is notably smaller in the 21st century than the 20th. From 2000 on, the winning candidate has won the popular vote by single digits. The 20+ percent wins of 1964 (Lyndon B. Johnson) and 1972 (Richard Nixon) are no longer par for the course. That said, the later half of the 20th century did vary between these massive wins and extremely close elections (see 1960, 1968, and 1976).
 
 The elections from 1948-2000 also appear to cycle fairly evenly between Republican wins and Democratic ones. In the 21st century thus far, however, we can see that Democrats have won the popular vote pretty consistently (⅚ races). These races have also become more reliably competitive, likely as a result of increasing political polarization and partisanship (3). As a result, I’d expect the 2024 popular vote to be quite close, with a margin of less than 10%, and, based solely on this plot, lean Democratic.
 
 ## Variation Between States
 
-In order to gain a better understanding of election results, we must dive deeper into the state-by-state data. The winner of each state’s electoral college votes is determined by that state’s popular vote, with all but two states (Nebraska and Maine) being winner take all. 
+In order to gain a better understanding of election results, we must dive deeper into the state-by-state data. The winner of each state’s electoral college votes is determined by that state’s popular vote, with all but two states (Nebraska and Maine) being winner take all.
 
 The animated map below illustrates the winner of the popular vote in each state (excluding third-party candidates) from 1948 to 2020. Each state’s label can be seen by hovering over it.
 
@@ -141,7 +144,7 @@ winners_map_figure <- winners_map %>% plot_geo(locationmode = "USA-states") %>%
 winners_map_figure
 ```
 
-By watching the timeline, we can see that certain states have quite consistently voted red or blue while others have shifted throughout time (and some—the “swing states”—change year-to-year). For instance, the West North Central (the Dakotas, Nebraska, Kansas) and some Mountain states (Wyoming, Idaho) voted red throughout almost all of the elections seen. These states are predominantly rural, following the urban-rural divide between Democrats and Republicans. 
+By watching the timeline, we can see that certain states have quite consistently voted red or blue while others have shifted throughout time (and some—the “swing states”—change year-to-year). For instance, the West North Central (the Dakotas, Nebraska, Kansas) and some Mountain states (Wyoming, Idaho) voted red throughout almost all of the elections seen. These states are predominantly rural, following the urban-rural divide between Democrats and Republicans.
 
 The most stark shift in state voting habits captured by this map is the domination of the Northeast by Democrats and the South by Republicans, part of the “twentieth-century reversal” attributed to a combination of race and the Civil Rights movement, economic differences, and other social factors by scholars (4).
 
@@ -202,7 +205,7 @@ As would be expected, the states with a narrower win margin (lighter color) are 
 
 My first prediction for 2024 is based on the simplified electoral cycle model provided by Matthew Dardet. I calculated the two-party popular vote in each state by taking ¾ of the voter share from the previous election (2020) and ¼ of the voter share from the election before that (2016) for each party.
 
-The map below illustrates the prediction with the projected popular vote margin in each state. As described earlier, based on the historic data of the previous two elections, we can again see the same “swing states” will likely have close margins.  
+The map below illustrates the prediction with the projected popular vote margin in each state. As described earlier, based on the historic data of the previous two elections, we can again see the same “swing states” will likely have close margins.
 
 ```{r predictionmap, echo = FALSE, warning=FALSE, message=FALSE}
 
@@ -256,7 +259,9 @@ map_2024 <-pv2p_2024_states %>%
   
   map_2024
 ```
-Then, by computing the electoral votes for each state based on its projected two-party popular vote, I predicted that Kamala Harris would win the election with 276 electoral votes. 
+
+
+Then, by computing the electoral votes for each state based on its projected two-party popular vote, I predicted that Kamala Harris would win the election with 276 electoral votes.
 
 ```{r prediction, echo = FALSE, warning=FALSE, message=FALSE}
 
@@ -277,18 +282,19 @@ winner_2024 <- pv2p_2024_states %>%
 # Show electoral college summaries
 print(winner_2024)
 ```
+
 ## Citations
-   1. “2020: The American Presidency Project.” The American Presidency Project. Accessed September 9, 2024. https://www.presidency.ucsb.edu/statistics/elections/2020. 
-   2. “The Republican Electoral College Advantage.” Cook Political Report. Accessed September 9, 2024. https://www.cookpolitical.com/cook-pvi/2022-partisan-voter-index/republican-electoral-college-advantage. 
-   3. Geoffreyvs. “Are Blowout Presidential Elections a Thing of the Past?” FiveThirtyEight, May 28, 2019. https://fivethirtyeight.com/features/are-blowout-presidential-elections-a-thing-of-the-past/. 
-   4. Monkovic, Toni. “50 Years of Electoral College Maps: How the U.S. Turned Red and Blue.” The New York Times, August 22, 2016. https://www.nytimes.com/2016/08/23/upshot/50-years-of-electoral-college-maps-how-the-us-turned-red-and-blue.html. 
+
+   1. “2020: The American Presidency Project.” The American Presidency Project. Accessed September 9, 2024. <https://www.presidency.ucsb.edu/statistics/elections/2020>.
+   2. “The Republican Electoral College Advantage.” Cook Political Report. Accessed September 9, 2024. <https://www.cookpolitical.com/cook-pvi/2022-partisan-voter-index/republican-electoral-college-advantage>.
+   3. Geoffreyvs. “Are Blowout Presidential Elections a Thing of the Past?” FiveThirtyEight, May 28, 2019. <https://fivethirtyeight.com/features/are-blowout-presidential-elections-a-thing-of-the-past/>.
+   4. Monkovic, Toni. “50 Years of Electoral College Maps: How the U.S. Turned Red and Blue.” The New York Times, August 22, 2016. <https://www.nytimes.com/2016/08/23/upshot/50-years-of-electoral-college-maps-how-the-us-turned-red-and-blue.html>.
 
 ## Data Sources
 
-Presidential Popular Votes, 1948-2024. Provided by Matthew Dardet.
-State Popular Votes, 1948-2024. Provided by Matthew Dardet.
+Presidential Popular Votes, 1948-2024. Provided by Matthew Dardet. 
+State Popular Votes, 1948-2024. Provided by Matthew Dardet. 
 Electoral College Votes Per State. Provided by Matthew Dardet.
-State Abbreviations. Downloaded from Jason Ong’s GitHub, https://github.com/jasonong/List-of-US-States/blob/master/states.csv 
-
+State Abbreviations. Downloaded from Jason Ong’s GitHub, <https://github.com/jasonong/List-of-US-States/blob/master/states.csv>
 
 
